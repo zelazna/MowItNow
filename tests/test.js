@@ -19,6 +19,6 @@ const { gridSize, mowersData } = parseEntry(entry)
 const lawn = new Lawn(gridSize)
 
 const manager = new MowersManager(mowersData)
-manager.start(lawn).then((result) =>
-  assert.strictEqual(result.join('\n'), expected)
-)
+manager.start(lawn)
+  .then(result => assert.strictEqual(result.join('\n'), expected))
+  .catch(console.log)

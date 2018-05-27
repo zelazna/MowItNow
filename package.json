@@ -2,12 +2,13 @@
   "name": "MowItNow",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/test.js",
+    "start": "node app/index.js"
   },
   "keywords": [],
   "author": "",
