@@ -2,7 +2,7 @@
 
 ## To Run
 
-`node app/index.js`
+`npm start`
 
 ## Test
 
