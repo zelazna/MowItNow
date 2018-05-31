@@ -4,7 +4,7 @@ class LawnMower {
   /**
    *
    * @param {Object} position the position and orientation of the mower
-   * @param {*} instructions the set of command to execute
+   * @param {Array} instructions the set of command to execute
    */
   constructor ({x, y, orientation}, instructions) {
     this.x = parseInt(x)
@@ -23,46 +23,39 @@ class LawnMower {
    * @param {Lawn} lawn
    * @returns {Promise}
    */
-  async start (lawn) {
+  start (lawn) {
+    this.lawn = lawn
+    return this._run()
+  }
+
+  /**
+   * recursively depile instructions
+   * @param {Int} index
+   * @returns {Promise}
+   */
+  _run (index = 0) {
     return new Promise((resolve, reject) => {
-      this.lawn = lawn
-      try {
-        this.instructions.map(instruction => this._run(instruction))
-        resolve(`${this.x} ${this.y} ${this.orientation}`)
-      } catch (error) {
-        reject(error)
+      if (index < this.instructions.length) {
+        try {
+          const computed = this._computeInstructions(this.instructions[index])
+          if (computed) index++
+          this._run(index)
+        } catch (error) {
+          reject(error)
+        }
       }
+      resolve(`${this.x} ${this.y} ${this.orientation}`)
     })
   }
 
   /**
-   * handle rotate and move
-   * @param {String} instruction
-   */
-  _run (instruction) {
-    if (orientations.includes(instruction)) {
-      this._rotate(instruction)
-    } else if (instruction === 'A') {
-      this._move()
-    }
-  }
-
-  /**
    * move the mower
-   * @param {String} instruction
+   * @param {Object} destination a coord object like { x:1, y:2}
    */
-  _move (instruction) {
-    const destination = this._directions(this.orientation)
-    if (!this.lawn.cellBusy(destination)) {
-      if (!this.lawn.outside(destination)) {
-        this.position = destination
-        this.lawn.clearPosition({x: this.x, y: this.y})
-        this.lawn.busyCells.push(destination)
-      }
-    } else {
-      // if the cell is busy recursively retry
-      setTimeout(() => this._move(instruction), 0)
-    }
+  _move (destination) {
+    this.position = destination
+    this.lawn.clearPosition({x: this.x, y: this.y})
+    this.lawn.busyCells.push(destination)
   }
 
   /**
@@ -78,6 +71,24 @@ class LawnMower {
       const newOrientationIndex = orientationIndex + 1
       this.orientation = compassPoints.hasOwnProperty(newOrientationIndex) ? compassPoints[newOrientationIndex] : compassPoints[0]
     }
+  }
+
+  /**
+   * handle rotate and move
+   * @param {String} instruction
+   */
+  _computeInstructions (instruction) {
+    if (orientations.includes(instruction)) {
+      this._rotate(instruction)
+    } else {
+      const destination = this._directions(this.orientation)
+      if (!this.lawn.outside(destination)) {
+        this._move(destination)
+      } else if (this.lawn.cellBusy(destination)) {
+        return false
+      }
+    }
+    return true
   }
 
   /**

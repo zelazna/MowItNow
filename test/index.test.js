@@ -17,8 +17,15 @@ const expected = `1 3 N
 
 const { gridSize, mowersData } = parseEntry(entry)
 const lawn = new Lawn(gridSize)
-
 const manager = new MowersManager(mowersData)
-manager.start(lawn)
-  .then(result => assert.strictEqual(result.join('\n'), expected))
-  .catch(console.log)
+
+describe('Manager', () => {
+  describe('#start', () => {
+    it('should return the expected value', (done) => {
+      manager.start(lawn)
+        .then(result => assert.strictEqual(result.join('\n'), expected))
+        .catch(console.log)
+      done()
+    })
+  })
+})
