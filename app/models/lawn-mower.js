@@ -76,6 +76,7 @@ class LawnMower {
   /**
    * handle rotate and move
    * @param {String} instruction
+   * @returns {Boolean} false if the cell is busy true otherwise
    */
   _computeInstructions (instruction) {
     if (orientations.includes(instruction)) {

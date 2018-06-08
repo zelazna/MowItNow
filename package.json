@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
+    "test": "./node_modules/mocha/bin/mocha $(find test -name \"*.test.js\")",
     "start": "node app/index.js"
   },
   "keywords": [],

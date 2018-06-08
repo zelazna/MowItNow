@@ -12,8 +12,7 @@ function parseEntry (input) {
   const mowersCommands = lines
     .filter((elem, index) => index % 2 !== 0)
     .map(row => row.split(''))
-  const mowersData = { mowersStartingPosition, mowersCommands }
-  return { gridSize, mowersData }
+  return { gridSize, 'mowersData': { mowersStartingPosition, mowersCommands } }
 }
 
 /**

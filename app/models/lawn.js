@@ -33,7 +33,7 @@ class Lawn {
    * @returns {Boolean} true if the cell is busy false otherwise
    */
   cellBusy (destination) {
-    return this.busyCells.filter(e => e.y === destination.y && e.x === destination.x).length
+    return !!this.busyCells.filter(e => e.y === destination.y && e.x === destination.x).length
   }
 }
 
